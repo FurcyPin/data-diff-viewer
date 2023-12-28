@@ -1,4 +1,6 @@
-/.mypy_cache/
-/.ruff_cache/
+.idea/
+.mypy_cache/
+.ruff_cache/
+
 /data_diff_viewer/templates/
 /poetry.lock
