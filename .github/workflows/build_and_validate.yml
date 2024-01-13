@@ -51,6 +51,9 @@ jobs:
       - name: Security safety
         run: poetry run safety check
 
+      - name: Build html template
+        run: dev/bin/build_html_template.sh
+
 #      - name: Run Unit Tests
 #        run: poetry run coverage run -m pytest
 
