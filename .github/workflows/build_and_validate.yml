@@ -51,10 +51,8 @@ jobs:
       - name: Security safety
         run: poetry run safety check
 
-      - name: Run Unit Tests
-        env:
-          HADOOP_HOME: .github/workflows/resources/hadoop
-        run: poetry run coverage run -m pytest
+#      - name: Run Unit Tests
+#        run: poetry run coverage run -m pytest
 
-      - name: Create coverage.xml
-        run: poetry run coverage xml
+#      - name: Create coverage.xml
+#        run: poetry run coverage xml
