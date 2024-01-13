@@ -109,3 +109,11 @@ it will create locally a [duckdb](https://duckdb.org/) database file containing
 all the data needed for displaying the report, then encode this file as Base64
 inside the HTML file, and write the result as a new HTML page at the specified location.
 
+
+## Changelog
+
+### v0.1.1
+
+- Added python stubs to be compliant with [PEP 561](https://peps.python.org/pep-0561/)
+- Added CI release process
+
