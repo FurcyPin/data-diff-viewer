@@ -4,3 +4,5 @@
 
 /data_diff_viewer/templates/
 /poetry.lock
+/dist/
+/.coverage
