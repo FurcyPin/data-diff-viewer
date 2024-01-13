@@ -2,11 +2,12 @@ import datetime
 import json
 from pathlib import Path
 
+import duckdb
+
 import data_diff_viewer
 from data_diff_viewer.diff_summary import DiffSummary
 from data_diff_viewer.utils import (
     encode_file_to_base64_string,
-    load_external_module,
     read_resource,
 )
 
@@ -28,7 +29,6 @@ def _write_report_files(
     diff_summary: DiffSummary,
     temp_dir: Path,
 ) -> None:
-    duckdb = load_external_module("duckdb")
     diff_summary_dict = {
         "data_diff_viewer_version": data_diff_viewer.__version__,
         "results_serialized_with": "duck_db:" + duckdb.__version__,
@@ -56,7 +56,6 @@ def _write_report_files(
 
 
 def _write_duck_db(temp_dir: Path, data_diff_path: Path) -> None:
-    duckdb = load_external_module("duckdb")
     conn = duckdb.connect(database=str(_get_db_path(temp_dir)))
     conn.execute(
         """
