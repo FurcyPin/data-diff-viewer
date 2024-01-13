@@ -6,7 +6,10 @@ authors = ["Furcy Pin <pin.furcy@gmail.com>"]
 readme = "README.md"
 homepage = "https://github.com/FurcyPin/data-diff-viewer"
 repository = "https://github.com/FurcyPin/data-diff-viewer"
-include = ["data_diff_viewer/templates/*"]
+include = [
+    "data_diff_viewer/templates/*",
+    "data_diff_viewer/py.typed",
+]
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<3.11"
