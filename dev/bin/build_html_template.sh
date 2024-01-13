@@ -1,6 +1,8 @@
 #!/bin/bash
 
 cd javascript/data-diff-viewer
+rm -rf build
+rm -rf node_modules
 npm install
 npm run build
 cd ../..
