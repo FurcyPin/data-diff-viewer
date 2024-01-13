@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import Dict, List
 
 
 @dataclass
@@ -38,7 +38,7 @@ class DiffSummary:
         -c INT
         +d INT
     """
-    column_names_diff: dict[str, str]
+    column_names_diff: Dict[str, str]
     """List of all column names present in the DataFrames, with an indicator
     whether it exists in both DataFrames (" "), only in the left DataFrame("-")
     or only in the right DataFrame ("+").
