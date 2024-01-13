@@ -1,0 +1,60 @@
+name: Build and Validate
+on:
+  push:
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+env:
+  PROJECT_NAME: data_diff_viewer
+  POETRY_VERSION: "1.7.1"
+
+jobs:
+  Build-and-Validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v3
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+
+      - name: Poetry lock
+        run: poetry lock
+
+      - name: Set up poetry cache
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'poetry'
+
+      - name: Install project
+        run: poetry install
+
+      - name: Linter ruff (replaces black, isort, flake8 and safety)
+        run: poetry run ruff check .
+      - name: Linter mypy
+        run: poetry run mypy ${{ env.PROJECT_NAME }}
+      - name: Security safety
+        run: poetry run safety check
+
+      - name: Run Unit Tests
+        env:
+          HADOOP_HOME: .github/workflows/resources/hadoop
+        run: poetry run coverage run -m pytest
+
+      - name: Create coverage.xml
+        run: poetry run coverage xml
