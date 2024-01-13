@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_TYPE: "release"  # "test" or "release"
+  RELEASE_TYPE: "test"  # "test" or "release"
   POETRY_VERSION: "1.7.1"
 
 jobs:
@@ -32,6 +32,9 @@ jobs:
 
       - name: Update PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build html template
+        run: dev/bin/build_html_template.sh
 
       - name: Build project for distribution
         run: poetry build
