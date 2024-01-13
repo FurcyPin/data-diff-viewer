@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_TYPE: "test"  # "test" or "release"
+  RELEASE_TYPE: "release"  # "test" or "release"
   POETRY_VERSION: "1.7.1"
 
 jobs:
