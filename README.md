@@ -112,13 +112,17 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 ## Changelog
 
-### v0.1.2
+### v0.1.3
 
-- Fixed incorrect packaging from v0.1.1
+- Fixed incorrect packaging from v0.1.1 and v0.1.2
+
+### v0.1.2 (Broken)
+
+This version got deployed with a part missing, please use version v0.1.3 instead
 
 ### v0.1.1 (Broken)
 
-This version got deployed without an important part, please use version v0.1.2 instead 
+This version got deployed with a part missing, please use version v0.1.3 instead
 
 - Added python stubs to be compliant with [PEP 561](https://peps.python.org/pep-0561/)
 - Added CI release process
