@@ -399,7 +399,7 @@ module.exports = function (webpackEnv) {
               include: paths.appSrc,
               loader: "babel-loader",
               options: {
-                presets: [["@babel/preset-react"]],
+                presets: [["@babel/preset-react", {"runtime": "automatic"}]],
                 plugins: [
                   isEnvDevelopment &&
                     shouldUseReactRefresh &&
@@ -424,7 +424,7 @@ module.exports = function (webpackEnv) {
                 babelrc: false,
                 configFile: false,
                 compact: false,
-                presets: [["@babel/preset-react"]],
+                presets: [["@babel/preset-react", {"runtime": "automatic"}]],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
