@@ -81,15 +81,15 @@ def _write_duck_db(temp_dir: Path, data_diff_path: Path) -> None:
     conn.close()
 
 
-def generate_report(
+def generate_report_string(
     report_title: str,
     diff_summary: DiffSummary,
     temp_dir: Path,
     data_diff_path: Path,
-    output_path: Path,
-    encoding: str,
-) -> None:
-    """Generate a standalone HTML report to visualize a data-diff.
+) -> str:
+    """Generate a string containing a standalone HTML report to visualize a data-diff.
+
+    This string must be written to a file to be used.
 
     The HTML report is self-contained: it can be opened as local files with a browser,
     and works even without any internet connection
@@ -133,14 +133,13 @@ def generate_report(
         diff_summary: A DiffSummary object containing all the metadata of the data-diff
         temp_dir: The Path to a temporary directory
         data_diff_path: The Path to a json file containing the data-diff results.
-        output_path: The Path of the HTML file to generate
-        encoding: The encoding to use to write the HTML file. UTF-8 is recommended.
+
+    Returns:
+        a string containing the HTML report. This string must be written to a file to be used.
     """
     _write_report_files(report_title, diff_summary, temp_dir)
     _write_duck_db(temp_dir, data_diff_path)
     base64_report = encode_file_to_base64_string(_get_db_path(temp_dir))
-
-    with output_path.open("w", encoding=encoding) as output:
-        report_template = read_resource("templates/diff_report.html")
-        report = report_template.replace("{{db_base64}}", base64_report)
-        output.write(report)
+    report_template = read_resource("templates/diff_report.html")
+    report = report_template.replace("{{db_base64}}", base64_report)
+    return report

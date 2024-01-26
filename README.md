@@ -112,6 +112,13 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 ## Changelog
 
+### v0.2.0
+
+Breaking Changes:
+- replaced method `generate_report` with `generate_report_string`: instead of writing directly the report to a file, 
+  we now return the full string. This leaves more flexibility, for example to write the report directly on a remote
+  file system (like hdfs or s3).
+
 ### v0.1.3
 
 - Fixed incorrect packaging from v0.1.1 and v0.1.2
