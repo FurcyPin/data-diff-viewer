@@ -30,7 +30,7 @@ code {
 
 .main {
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 2000px;
   text-align: center;
   border-spacing: 2px;
 }
@@ -81,10 +81,6 @@ code {
   color: white;
 }
 
-/* Define the style for the bar charts */
-.chart_bar_container {
-  width: 100%;
-}
 
 /* Define the style for the bar charts */
 .chart_bar_table {
@@ -100,7 +96,7 @@ code {
   height: 20px;
 }
 
-.chart_bar_table_tooltip {
+.chart_bar_table_container {
   cursor: pointer;
 }
 
@@ -118,7 +114,7 @@ code {
   left: 1000px;
 }
 
-.chart_bar_table_tooltip:hover .chart_bar_table_tooltip_text {
+.chart_bar_table_container:hover .chart_bar_table_tooltip_text {
   visibility: visible;
   transition: .25s all ease;
   transition-delay: .75s;
@@ -152,6 +148,30 @@ code {
 .DataDiffTable {
   text-align: left;
 }
+
+
+.DataDiffTable_tbody {
+  display: -webkit-inline-box;
+}
+
+
+.ColumnDiffRow {
+
+}
+
+.ColumnDiffRow_td.col_name {
+  width: 1%;
+}
+
+.ColumnDiffRow_td.chart_bar_container {
+  width: 200px;
+}
+
+.ColumnDiffRow_td.left,
+ ColumnDiffRow_td.right {
+  width: auto;
+}
+
 
 /* Define the style for buttons when active */
 button.active {

@@ -175,7 +175,7 @@ function DataDiffTable({ diff_summary, diff_per_col }) {
 
   return (
     <table className="DataDiffTable" style={{ borderSpacing: 0, width: 'auto', display: 'inline-block' }}>
-      <tbody>
+      <tbody className="DataDiffTable_tbody">
         {
           diff_per_col.map(
             (col_diff, id) => <ColumnDiff key={id} col_diff={col_diff} diff_summary={diff_summary} />
@@ -254,12 +254,13 @@ function ColumnDiff({col_diff, diff_summary}) {
 
 function ColumnDiffRow({col_diff, diff_summary, elements, no_change}) {
   return (
-    <tr key={col_diff.column_name} className={no_change ? 'no_change' : ''}>
-      <td className={diff_summary.join_cols.includes(col_diff.column_name) ? 'column_name join_column_name' : 'column_name'}>
+    <tr key={col_diff.column_name} className={"ColumnDiffRow " + (no_change ? 'no_change' : '')}>
+      <td className="ColumnDiffRow_td left"/>
+      <td className={"ColumnDiffRow_td col_name " + (diff_summary.join_cols.includes(col_diff.column_name) ? 'column_name join_column_name' : 'column_name')}>
         <pre style={{margin: 0}}>{`${diff_summary.column_names_diff[col_diff.column_name]} ${col_diff.column_name}`}</pre>
       </td>
-      <td className="chart_bar_container">
-        <div className="chart_bar_table_tooltip">
+      <td className="ColumnDiffRow_td chart_bar_container">
+        <div className="chart_bar_table_container">
           <table className="chart_bar_table">
             <tbody>
               <tr className="chart_bar_row">
@@ -274,6 +275,7 @@ function ColumnDiffRow({col_diff, diff_summary, elements, no_change}) {
           </table>
         </div>
       </td>
+      <td className="ColumnDiffRow_td right"/>
     </tr>
   )
 }
@@ -305,7 +307,7 @@ function ChartBarTooltip({element}) {
 function DetailsTable({col_diff, diff_summary, elements, no_change}) {
   return (
     <tr key={col_diff.column_name} className={`details${no_change ? ' no_change' : ''}`} column_name={col_diff.column_name}>
-      <td colSpan="2">
+      <td colSpan="4">
         <div className="top_cols_container">
           {elements.map((element, id) => <ElementDetails key={id} col_diff={col_diff} diff_summary={diff_summary} element={element} />)}
         </div>
