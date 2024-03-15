@@ -1,21 +1,21 @@
-import * as duckdb from '@duckdb/duckdb-wasm';
-import db_base64 from './db_base64.js';
+import * as duckdb from '@duckdb/duckdb-wasm'
+import db_base64 from './db_base64.js'
 
 async function _load_duck_db(){
-  const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+  const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles()
 
   // Select a bundle based on browser checks
-  const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+  const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES)
 
   const worker_url = URL.createObjectURL(
     new Blob([`importScripts("${bundle.mainWorker}");`], {type: 'text/javascript'})
-  );
+  )
 
   // Instantiate the asynchronus version of DuckDB-wasm
-  const worker = new Worker(worker_url);
-  const logger = new duckdb.ConsoleLogger();
-  const db = new duckdb.AsyncDuckDB(logger, worker);
-  await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+  const worker = new Worker(worker_url)
+  const logger = new duckdb.ConsoleLogger()
+  const db = new duckdb.AsyncDuckDB(logger, worker)
+  await db.instantiate(bundle.mainModule, bundle.pthreadWorker)
 
   // Translate a base64 object to Uint8Array
   function base64ToUint8Array(base64) {
@@ -30,7 +30,7 @@ async function _load_duck_db(){
 
   // Load the report database
   const dbBytes = base64ToUint8Array(db_base64)
-  await db.registerFileBuffer('diff_report.db', dbBytes);
+  await db.registerFileBuffer('diff_report.db', dbBytes)
   await db.open({path: `diff_report.db`})
   const conn = await db.connect()
 
@@ -88,5 +88,5 @@ function cacheResult(fun){
   }
 }
 
-const load_diff_report = cacheResult(_load_diff_report) ;
-export default load_diff_report;
+const load_diff_report = cacheResult(_load_diff_report)
+export default load_diff_report
