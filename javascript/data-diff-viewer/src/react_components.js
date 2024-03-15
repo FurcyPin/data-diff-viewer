@@ -1,38 +1,42 @@
-import React from 'react';
-import load_diff_report from './load_report.js';
-import * as Interactions from './interactions.js';
-import * as Diff2Html from 'diff2html/bundles/js/diff2html.min.js';
-import 'diff2html/bundles/css/diff2html.min.css';
+import React from 'react'
+import load_diff_report from './load_report.js'
+import * as Interactions from './interactions.js'
+import * as Diff2Html from 'diff2html/bundles/js/diff2html.min.js'
+import 'diff2html/bundles/css/diff2html.min.css'
+
+var current_diff_detail_row = null
 
 function DiffReport() {
-  const [diffData, setDiffData] = React.useState(null);
+  const [diffData, setDiffData] = React.useState(null)
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const diff_report = await load_diff_report();
+        const diff_report = await load_diff_report()
+
+        /* Uncomment this for debugging */
         // console.log("diff_report", diff_report)
-        // window.diff_report = diff_report;
+        // window.diff_report = diff_report
 
         setDiffData({
           report_title: diff_report.report_title,
           diff_summary: diff_report.diff_summary,
           diff_per_col: diff_report.diff_per_col,
-        });
+        })
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error)
       }
-    };
+    }
 
-    fetchData();
+    fetchData()
   }, []); // The empty dependency array ensures that this effect runs once on mount
 
   if (!diffData) {
     // Data is still being fetched, render a loading state or return null
-    return <p>Loading...</p>;
+    return <p>Loading...</p>
   }
 
-  const { report_title, diff_summary, diff_per_col } = diffData;
+  const { report_title, diff_summary, diff_per_col } = diffData
 
   return (
     <React.Fragment>
@@ -40,13 +44,13 @@ function DiffReport() {
       <SchemaDiffReport diff_summary={diff_summary} />
       <DataDiffReport report_title={report_title} diff_summary={diff_summary} diff_per_col={diff_per_col} />
     </React.Fragment>
-  );
+  )
 }
 
 function Title({report_title, diff_summary}) {
   return (
     <h1 className="report_title">{report_title}</h1>
-  );
+  )
 }
 
 
@@ -62,7 +66,7 @@ function SchemaDiffReport({report_title, diff_summary}) {
       </button>
       {diff_summary.same_schema ? <SameSchemaDetails diff_summary={diff_summary} /> : <DiffSchemaDetails diff_summary={diff_summary} />}
     </React.Fragment>
-  );
+  )
 }
 
 function SameSchemaDetails({diff_summary}) {
@@ -96,7 +100,7 @@ function SameSchemaDetails({diff_summary}) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function SameSchemaDetailsRow({line, id}) {
@@ -122,7 +126,7 @@ function DiffSchemaDetails({diff_summary}) {
     drawFileList: false,
     matching: 'lines',
     outputFormat: 'side-by-side',
-  });
+  })
 
   return (
     <React.Fragment>
@@ -136,7 +140,7 @@ function DiffSchemaDetails({diff_summary}) {
         </i>
       </div>
     </React.Fragment>
-  );
+  )
 }
 
 
@@ -166,7 +170,7 @@ function DataDiffReport({report_title, diff_summary, diff_per_col}) {
 
 function DataDiffTable({ diff_summary, diff_per_col }) {
   if (diff_summary.total_nb_rows === 0) {
-    return <div className="box orange">Both DataFrames are empty</div>;
+    return <div className="box orange">Both DataFrames are empty</div>
   }
 
   return (
@@ -179,15 +183,15 @@ function DataDiffTable({ diff_summary, diff_per_col }) {
         }
       </tbody>
     </table>
-  );
+  )
 }
 
 function ColumnDiff({col_diff, diff_summary}) {
 
   function sortDiffArray(array) {
     return array.sort((a, b) => {
-      return b.nb - a.nb;
-    });
+      return b.nb - a.nb
+    })
   }
 
   const no_change_element = {
@@ -245,7 +249,7 @@ function ColumnDiff({col_diff, diff_summary}) {
       <ColumnDiffRow col_diff={col_diff} diff_summary={diff_summary} elements={elements} no_change={no_change} />
       <DetailsTable col_diff={col_diff} diff_summary={diff_summary} elements={elements} no_change={no_change} />
     </React.Fragment>
-  );
+  )
 }
 
 function ColumnDiffRow({col_diff, diff_summary, elements, no_change}) {
@@ -271,7 +275,7 @@ function ColumnDiffRow({col_diff, diff_summary, elements, no_change}) {
         </div>
       </td>
     </tr>
-  );
+  )
 }
 
 function ChartBar({element, col_diff}) {
@@ -285,7 +289,7 @@ function ChartBar({element, col_diff}) {
       }}
       onClick={() => Interactions.toggleColumnDetails(col_diff.column_name)}
     ></td>
-  );
+  )
 }
 
 function ChartBarTooltip({element}) {
@@ -295,7 +299,7 @@ function ChartBarTooltip({element}) {
       {element.name}: {element.count} ({element.pct}%)
       </td>
     </tr>
-  );
+  )
 }
 
 function DetailsTable({col_diff, diff_summary, elements, no_change}) {
@@ -307,7 +311,7 @@ function DetailsTable({col_diff, diff_summary, elements, no_change}) {
         </div>
       </td>
     </tr>
-  );
+  )
 }
 
 function ElementDetails({col_diff, diff_summary, element}) {
@@ -374,7 +378,7 @@ function DiffDetailRow({element, col_diff, diff_row}) {
         </td>
       </React.Fragment>
     </tr>
-  );
+  )
 }
 
 function DiffDetailRowValue({element, diff_row}) {
