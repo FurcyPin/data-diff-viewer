@@ -382,7 +382,7 @@ function DiffDetailRowValue({element, diff_row}) {
     case 'no_change':
       return (
         <td className="top_col_table_div">
-          {diff_row.value == null ? <i>NULL</i> : diff_row.value}
+          {diff_row.value == null ? <i>NULL</i> : format_value(diff_row.value)}
         </td>
       )
 
@@ -390,11 +390,11 @@ function DiffDetailRowValue({element, diff_row}) {
       return(
         <React.Fragment>
           <td className="top_col_table_div">
-            {diff_row.left_value == null ? <i>NULL</i> : diff_row.left_value}
+            {diff_row.left_value == null ? <i>NULL</i> : format_value(diff_row.left_value)}
           </td>
           <td className="top_col_table_div">&#10132;</td>
           <td className="top_col_table_div">
-            {diff_row.right_value == null ? <i>NULL</i> : diff_row.right_value}
+            {diff_row.right_value == null ? <i>NULL</i> : format_value(diff_row.right_value)}
           </td>
         </React.Fragment>
       )
@@ -402,14 +402,14 @@ function DiffDetailRowValue({element, diff_row}) {
     case 'only_in_left':
       return(
         <td className="top_col_table_div">
-          {diff_row.value == null ? <i>NULL</i> : diff_row.value}
+          {diff_row.value == null ? <i>NULL</i> : format_value(diff_row.value)}
         </td>
       )
 
     case 'only_in_right':
       return(
         <td className="top_col_table_div">
-          {diff_row.value == null ? <i>NULL</i> : diff_row.value}
+          {diff_row.value == null ? <i>NULL</i> : format_value(diff_row.value)}
         </td>
       )
     default:
@@ -417,4 +417,19 @@ function DiffDetailRowValue({element, diff_row}) {
   } ;
 }
 
-export default DiffReport;
+function format_value(sample_value) {
+  if (typeof sample_value === 'object' && sample_value !== null) {
+    return JSON.stringify(sample_value)
+  }
+  else if (typeof sample_value === 'string' && sample_value !== null) {
+    return `"${sample_value}"`
+  }
+  else if (sample_value !== null) {
+    return sample_value.toString()
+  }
+  else {
+    return "NULL"
+  }
+}
+
+export default DiffReport
