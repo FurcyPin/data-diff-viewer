@@ -256,7 +256,7 @@ function ColumnDiffRow({col_diff, diff_summary, elements, no_change}) {
   return (
     <tr key={col_diff.column_name} className={"ColumnDiffRow " + (no_change ? 'no_change' : '')}>
       <td className="ColumnDiffRow_td left"/>
-      <td className={"ColumnDiffRow_td col_name " + (diff_summary.join_cols.includes(col_diff.column_name) ? 'column_name join_column_name' : 'column_name')}>
+      <td className={"ColumnDiffRow_td column_name " + (diff_summary.join_cols.includes(col_diff.column_name) ? ' join_column_name' : '')}>
         <pre style={{margin: 0}}>{`${diff_summary.column_names_diff[col_diff.column_name]} ${col_diff.column_name}`}</pre>
       </td>
       <td className="ColumnDiffRow_td chart_bar_container">
