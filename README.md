@@ -93,6 +93,43 @@ with tempfile.TemporaryDirectory() as temp_dir:
     print(f"Report exported as {output_file_path}")
 ```
 
+### 5. (Optional) Displaying sample data
+
+Since version v0.3.0, the `generate_report` method takes a new optional argument called `sample_table_paths`.
+This is a list of paths that should point to parquet tables representing samples of rows from the diffed DataFrames.
+
+To use it, two extra elements must be passed to this method.
+
+1 : The optional argument `sample_table_paths` must be passed, it should be a list of paths pointing to one or
+several parquet tables. The sample tables should give examples of rows from the original DataFrames being
+compared.
+
+- A `__SAMPLE_ID__` column of type STRING that contains a unique identifier for the sample row
+- Columns having the same name as the ones from the compared DataFrame, with the following schema:
+
+```
+<COL_NAME>: struct (nullable = false)
+    |-- left_value: <T> (nullable = true)
+    |-- right_value: <T> (nullable = true)
+    |-- is_equal: boolean (nullable = true)
+    |-- exists_left: boolean (nullable = false)
+    |-- exists_right: boolean (nullable = false)
+```
+where `<COL_NAME>` is the name and `<T>` the type of the corresponding in the compared DataFrame.
+
+_Note: If the name contains the string "__STRUCT__" and "__ARRAY__", they will be replaced with `"."` and `"!"`
+  respectively._
+
+2 : The elements of `diff.changed`, `diff.no_change`, `diff.only_in_left` and `diff.only_in_right` arrays
+should contain an extra field called "sample_ids" that contains a list of nullable strings
+(one for each sample table). Each of those string is either NULL or an id equal to the `__SAMPLE_ID__`
+from one of the rows of the corresponding sample table.
+
+_Note: In the simple cases (when the diffed tables are not nested), there is only one sample table.
+  But when the diff tables contains arrays of structs that are exploded (if one of the join_cols contains
+  an exclamation mark `!`), then we will have one sample table per level of granularity (a.k.a. "shard")._
+
+
 
 # How do this project work ?
 
@@ -111,6 +148,13 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 
 ## Changelog
+
+
+### v0.3.0
+
+New features:
+- We can now display sample rows when we click on one of the "most frequent value/change".
+
 
 ### v0.2.0
 

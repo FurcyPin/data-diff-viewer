@@ -66,17 +66,22 @@ code {
   font-size: large;
 }
 
-.green {
+.box.green {
   background-color: green;
   color: white;
 }
 
-.red {
+.box.red {
   background-color: red;
   color: white;
 }
 
-.orange {
+.box.blue {
+  background-color: darkblue;
+  color: white;
+}
+
+.box.orange {
   background-color: orange;
   color: white;
 }
@@ -216,6 +221,16 @@ button.active {
 }
 
 /* Define the style for the bar charts */
+.top_col_table_row {
+  border: 2px solid transparent;
+}
+
+/* Define the style for the bar charts */
+.top_col_table_row.selected{
+  border: 2px double brown;
+}
+
+/* Define the style for the bar charts */
 .top_col_table_div {
   padding-right: 10px;
   white-space: nowrap;
@@ -227,3 +242,41 @@ button.active {
   width: 100%;
 }
 
+
+.SampleDataTable {
+  border-collapse: collapse;
+}
+
+.SampleDataTable th,td {
+  text-align: left;
+}
+
+.SampleDataTable tr {
+  border: 1px solid lightgrey;
+}
+
+.SampleDataRowVerticalCell.selected {
+  border: 2px double brown;
+}
+
+.SampleDataRowVerticalCell.missing {
+  background-color: var(--d2h-empty-placeholder-bg-color);
+}
+
+.LeftDiff.change {
+  background-color: var(--d2h-del-bg-color);
+}
+
+.LeftDiff del {
+  text-decoration: none;
+  background-color: var(--d2h-del-highlight-bg-color);
+}
+
+.RightDiff.change {
+  background-color: var(--d2h-ins-bg-color);
+}
+
+.RightDiff ins {
+  text-decoration: none;
+  background-color: var(--d2h-ins-highlight-bg-color);
+}
