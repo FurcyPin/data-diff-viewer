@@ -1,5 +1,5 @@
 import React from 'react'
-import load_diff_report from './load_report.js'
+import * as report_loader from './report_loader.js'
 import * as Interactions from './interactions.js'
 import * as Diff2Html from 'diff2html/bundles/js/diff2html.min.js'
 import 'diff2html/bundles/css/diff2html.min.css'
@@ -12,7 +12,7 @@ function DiffReport() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const diff_report = await load_diff_report()
+        const diff_report = await report_loader.load_diff_report()
 
         /* Uncomment this for debugging */
         // console.log("diff_report", diff_report)
