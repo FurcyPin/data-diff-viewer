@@ -128,10 +128,12 @@ code {
   font-size: 1.4em;
   padding-right: 5px;
   width: 20%;
+  text-align: left;
 }
 
+
 /* Define the style for the column name of join_cols */
-.join_column_name {
+.column_name.join_column_name {
   font-weight: bold;
 }
 
@@ -159,7 +161,7 @@ code {
 
 }
 
-.ColumnDiffRow_td.col_name {
+.ColumnDiffRow_td.column_name {
   width: 1%;
 }
 
