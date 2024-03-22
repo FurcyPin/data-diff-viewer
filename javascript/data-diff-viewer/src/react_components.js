@@ -20,8 +20,8 @@ function DiffReport() {
         const diff_report = await report_loader.load_diff_report()
 
         /* Uncomment this for debugging */
-        // console.log("diff_report", diff_report)
-        // window.diff_report = diff_report
+         console.log("diff_report", diff_report)
+         window.diff_report = diff_report
 
         setDiffData({
           report_title: diff_report.report_title,
@@ -465,6 +465,25 @@ function DiffDetailRow({element, col_diff, diff_row, on_select_diff_detail_row})
   )
 }
 
+function DiffDetailRowChanged({diff_row}) {
+  let char_diff = null
+  let left = format_value(diff_row.left_value) ;
+  let right = format_value(diff_row.right_value) ;
+  if(diff_row.left_value == null ^ diff_row.right_value == null) {
+    char_diff = [{"removed": true, "value": left}, {"added": true, "value": right}]
+  }
+  else {
+    char_diff = Diff.diffChars(left, right)
+  }
+  return(
+    <React.Fragment>
+      <LeftDiff char_diff={char_diff} className="top_col_table_div"/>
+      <td className="top_col_table_div">&#10132;</td>
+      <RightDiff char_diff={char_diff} className="top_col_table_div"/>
+    </React.Fragment>
+  )
+}
+
 function DiffDetailRowValue({element, diff_row}) {
   switch (element.type) {
     case 'no_change':
@@ -475,16 +494,8 @@ function DiffDetailRowValue({element, diff_row}) {
       )
 
     case 'changed':
-      return(
-        <React.Fragment>
-          <td className="top_col_table_div">
-            {diff_row.left_value == null ? <i>NULL</i> : format_value(diff_row.left_value)}
-          </td>
-          <td className="top_col_table_div">&#10132;</td>
-          <td className="top_col_table_div">
-            {diff_row.right_value == null ? <i>NULL</i> : format_value(diff_row.right_value)}
-          </td>
-        </React.Fragment>
+      return (
+        <DiffDetailRowChanged diff_row={diff_row}/>
       )
 
     case 'only_in_left':
@@ -563,11 +574,11 @@ function SampleDataRowVertical({sample_row}) {
   )
 }
 
-function LeftDiff({char_diff}) {
+function LeftDiff({char_diff, className=""}) {
   if(char_diff) {
     const has_change = char_diff.some(change => change.removed || change.added)
     return (
-      <td className={"LeftDiff " + (has_change ? "change" : "")}>
+      <td className={"LeftDiff " + className + " " + (has_change ? "change" : "")}>
         {
           char_diff.map(
             (change, id) => <LeftDiffPart key={id} change={change}/>
@@ -584,11 +595,11 @@ function LeftDiff({char_diff}) {
   }
 }
 
-function RightDiff({char_diff}) {
+function RightDiff({char_diff, className=""}) {
   if(char_diff) {
     const has_change = char_diff.some(change => change.removed || change.added)
     return (
-      <td className={"RightDiff " + (has_change ? "change" : "")}>
+      <td className={"RightDiff " + className + " "  + (has_change ? "change" : "")}>
         {
           char_diff.map(
             (change, id) => <RightDiffPart key={id} change={change}/>
@@ -644,7 +655,7 @@ function SampleDataRowVerticalCell({col_name, col_diff}) {
       char_diff = [{"removed": true, "value": left}, {"added": true, "value": right}]
     }
     else {
-      char_diff = Diff.diffChars(format_value(col_diff.left_value), format_value(col_diff.right_value))
+      char_diff = Diff.diffChars(left, right)
     }
   }
 
