@@ -201,14 +201,14 @@ button.active {
 /* top_col_table: table displaying the most frequent column values/changes */
 /* Define the style for the table */
 .top_col_table {
-  border: 2px solid transparent;
+/*  border: 2px solid transparent; */
   border-top: 2px solid lightgrey;
   border-collapse: collapse;
   margin: 0 auto;
   border-spacing: 2px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 500px;
+/*  overflow-y: auto; */
+/*  overflow-x: hidden; */
+/*  max-height: 500px; */
 }
 
 /* Define the style for the header */
