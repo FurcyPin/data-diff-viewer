@@ -210,7 +210,6 @@ function DataDiffReport({report_title, diff_summary, diff_per_col, on_select_dif
           on_select_diff_detail_row={on_select_diff_detail_row}
       />
       <SampleDataTable diff_summary={diff_summary} sample_rows={sample_rows}/>
-
     </div>
   )
 }
@@ -367,15 +366,17 @@ function DetailsTable({col_diff, diff_summary, elements, no_change, on_select_di
   return (
     <tr key={col_diff.column_name} className={`details${no_change ? ' no_change' : ''}`} column_name={col_diff.column_name}>
       <td colSpan="4">
-        <div className="top_cols_container">
-          {elements.map((element, id) =>
-            <ElementDetails
-              key={id}
-              col_diff={col_diff}
-              diff_summary={diff_summary}
-              element={element}
-              on_select_diff_detail_row={on_select_diff_detail_row}
-            />)}
+        <div className="DetailsTable">
+          <div className="top_cols_container">
+            {elements.map((element, id) =>
+              <ElementDetails
+                key={id}
+                col_diff={col_diff}
+                diff_summary={diff_summary}
+                element={element}
+                on_select_diff_detail_row={on_select_diff_detail_row}
+              />)}
+          </div>
         </div>
       </td>
     </tr>
@@ -440,12 +441,9 @@ function DiffDetailRow({element, col_diff, diff_row, on_select_diff_detail_row})
         <DiffDetailRowValue element={element} diff_row={diff_row}/>
         <td className="top_col_table_div">{diff_row.nb}</td>
         <td className="top_col_table_div">
-          <table
-            className="top_col_bar_table"
-            style={{ width: '100%', borderCollapse: 'collapse' }}
-          >
+          <table className="top_col_bar_table">
             <tbody>
-              <tr style={{ width: '100%', height: '20px' }}>
+              <tr>
                 <td
                   style={{
                     backgroundColor: element.color,
