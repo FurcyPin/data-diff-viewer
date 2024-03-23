@@ -87,6 +87,62 @@ code {
 }
 
 
+
+
+/* Define the style for the column name */
+.column_name {
+  font-family: monospace;
+  font-size: 1.4em;
+  padding-right: 5px;
+  width: 20%;
+  text-align: left;
+}
+
+
+/* Define the style for the column name of join_cols */
+.column_name.join_column_name {
+  font-weight: bold;
+}
+
+/* Define the style for columns with no change */
+.no_change {
+  display: 'table-row';
+}
+
+/* Define the style for columns with no change */
+.details {
+  display: none;  
+}
+
+
+.DataDiffTable {
+  text-align: left;
+}
+
+
+.DataDiffTable_tbody {
+  display: -webkit-inline-box;
+}
+
+
+.ColumnDiffRow {
+
+}
+
+.ColumnDiffRow_td.column_name {
+  width: 1%;
+}
+
+.ColumnDiffRow_td.chart_bar_container {
+  width: 200px;
+  position: relative;
+}
+
+.ColumnDiffRow_td.left,
+ ColumnDiffRow_td.right {
+  width: auto;
+}
+
 /* Define the style for the bar charts */
 .chart_bar_table {
   table-layout: fixed;
@@ -116,69 +172,17 @@ code {
 
   /* Position the tooltip */
   position: absolute;
-  left: 1000px;
+  left: -100%;
+  right: -50%;
+  z-index: 1;
 }
+
 
 .chart_bar_table_container:hover .chart_bar_table_tooltip_text {
   visibility: visible;
   transition: .25s all ease;
   transition-delay: .75s;
-
 }
-
-
-/* Define the style for the column name */
-.column_name {
-  font-family: monospace;
-  font-size: 1.4em;
-  padding-right: 5px;
-  width: 20%;
-  text-align: left;
-}
-
-
-/* Define the style for the column name of join_cols */
-.column_name.join_column_name {
-  font-weight: bold;
-}
-
-/* Define the style for columns with no change */
-.no_change {
-  display: 'table-row';
-}
-
-/* Define the style for columns with no change */
-.details {
-  display: none;  
-}
-
-.DataDiffTable {
-  text-align: left;
-}
-
-
-.DataDiffTable_tbody {
-  display: -webkit-inline-box;
-}
-
-
-.ColumnDiffRow {
-
-}
-
-.ColumnDiffRow_td.column_name {
-  width: 1%;
-}
-
-.ColumnDiffRow_td.chart_bar_container {
-  width: 200px;
-}
-
-.ColumnDiffRow_td.left,
- ColumnDiffRow_td.right {
-  width: auto;
-}
-
 
 /* Define the style for buttons when active */
 button.active {
@@ -186,16 +190,29 @@ button.active {
   color: black;
 }
 
+.DetailsTable {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
 /* top_cols_container: collapsible container for the top_cols_table */
 .top_cols_container {
-  width: 100%;
+  width: auto;
   display: inline-flex;
+}
+
+.top_cols_container_side_filler {
+  width: auto;
 }
 
 .top_col_table_container {
   border: 2px solid lightgrey;
   margin-left: 2px;
   margin-right: 2px;
+  box-sizing: border-box;
 }
 
 /* top_col_table: table displaying the most frequent column values/changes */
@@ -239,12 +256,18 @@ button.active {
 /* Define the style for the bar charts */
 .top_col_bar_table {
   table-layout: fixed;
-  width: 100%;
+  width: auto;
+  borderCollapse: collapse;
 }
 
+.top_col_bar_table tr {
+  width: auto;
+  height: 20px;
+}
 
 .SampleDataTable {
   border-collapse: collapse;
+  display: inline-block;
 }
 
 .SampleDataTable th,td {
