@@ -40,7 +40,7 @@ async function _load_duck_db(){
 /**
  * Load the duckdb databse file embedded in db_base64.js and return a duckdb-wasm connection.
  */
-const get_or_create_duckdb = cacheResult(_load_duck_db)
+const get_or_create_duckdb = cacheResult("_load_duck_db", _load_duck_db)
 
 
 async function _getSampleTableNames() {
@@ -59,7 +59,7 @@ async function _getSampleTableNames() {
 /**
  * Return the name of the sample tables, if they don't exist, return an empty array.
  */
-export const getSampleTableNames = cacheResult(_getSampleTableNames)
+export const getSampleTableNames = cacheResult("_getSampleTableNames", _getSampleTableNames)
 
 
 async function _get_diff_report(conn){
@@ -102,7 +102,7 @@ async function _load_diff_report() {
 /**
  * Load the DiffReport from the embedded duckdb database.
  */
-export const load_diff_report = cacheResult(_load_diff_report)
+export const load_diff_report = cacheResult("_load_diff_report", _load_diff_report)
 
 
 async function _get_sample_table(sampleTableName, sampleIds, conn) {
@@ -138,12 +138,12 @@ export async function getSampleData(sampleTableNames, sampleIds){
 
 /* Cache the result of a function to avoid recomputing it */
 let cache = {}
-function cacheResult(fun){
+function cacheResult(fun_name, fun){
   return async () => {
     if(!(fun.name in cache)) {
-      cache[fun.name] = fun()
+      cache[fun_name] = fun()
     }
-    return cache[fun.name]
+    return cache[fun_name]
   }
 }
 
