@@ -1,17 +1,14 @@
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 
-
-import './index.css';
-import DiffReport from './react_components';
-import reportWebVitals from './reportWebVitals';
-
+import "./index.css";
+import DiffReport from "./react_components";
+import reportWebVitals from "./reportWebVitals";
 
 window.addEventListener("DOMContentLoaded", function (e) {
-  ReactDOM.createRoot(document.getElementById('root'))
-  .render(
+  ReactDOM.createRoot(document.getElementById("root")).render(
     <div id="main" className="main">
       <DiffReport />
-    </div>
+    </div>,
   );
 });
 
