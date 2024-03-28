@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as Diff from "diff";
 import React from "react";
 import * as report_loader from "./report_loader.js";
@@ -10,6 +11,49 @@ var current_diff_detail_row = null;
 /* Name of the column corresponding to this row */
 var current_column_with_diff_detail = null;
 
+class CustomPropTypes {
+  static diff_summary = PropTypes.shape({
+    column_names_diff: PropTypes.object.isRequired,
+    join_cols: PropTypes.arrayOf(PropTypes.string).isRequired,
+    left_df_alias: PropTypes.string.isRequired,
+    right_df_alias: PropTypes.string.isRequired,
+    same_data: PropTypes.bool.isRequired,
+    same_schema: PropTypes.bool.isRequired,
+    schema_diff_str: PropTypes.string.isRequired,
+    total_nb_rows: PropTypes.number.isRequired,
+  });
+  static char_diff_change = PropTypes.shape({
+    value: PropTypes.string.isRequired,
+    removed: PropTypes.bool,
+    added: PropTypes.bool,
+  });
+  static sample_row = PropTypes.instanceOf(Map);
+  static col_diff = PropTypes.shape({
+    column_name: PropTypes.string.isRequired,
+    column_number: PropTypes.number.isRequired,
+    counts: PropTypes.shape({
+      changed: PropTypes.number.isRequired,
+      no_change: PropTypes.number.isRequired,
+      only_in_left: PropTypes.number.isRequired,
+      only_in_right: PropTypes.number.isRequired,
+      total: PropTypes.number.isRequired,
+    }),
+    diff: PropTypes.shape({
+      changed: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
+      no_change: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
+      only_in_left: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
+      only_in_right: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
+    }),
+  });
+  static diff_row = PropTypes.shape({
+    value: PropTypes.any,
+    left_value: PropTypes.any,
+    right_value: PropTypes.any,
+    nb: PropTypes.number.isRequired,
+    sample_ids: PropTypes.arrayOf(PropTypes.string),
+  });
+}
+
 function DiffReport() {
   const [diffData, setDiffData] = React.useState(null);
   const [sampleRows, setSampleRows] = React.useState(null);
@@ -18,10 +62,6 @@ function DiffReport() {
     const fetchData = async () => {
       try {
         const diff_report = await report_loader.load_diff_report();
-
-        /* Uncomment this for debugging */
-        console.log("diff_report", diff_report);
-        window.diff_report = diff_report;
 
         setDiffData({
           report_title: diff_report.report_title,
@@ -42,7 +82,7 @@ function DiffReport() {
     column_name,
   ) => {
     const sampleTableNames = await report_loader.getSampleTableNames();
-    if (sampleTableNames.length == 0) {
+    if (sampleTableNames.length === 0) {
       return;
     }
     current_column_with_diff_detail = column_name;
@@ -52,7 +92,7 @@ function DiffReport() {
       current_diff_detail_row.classList.toggle("selected");
     }
     // If we click on the row that was already selected, we stop displaying the sample row for it.
-    if (clicked_diff_detail_row == current_diff_detail_row) {
+    if (clicked_diff_detail_row === current_diff_detail_row) {
       current_diff_detail_row = null;
       setSampleRows(null);
       return;
@@ -67,9 +107,9 @@ function DiffReport() {
     let sample_rows_sorted_by_column = sample_data.map(
       (sample_row) =>
         new Map(
-          diff_per_col.map((diff_col) => [
-            diff_col.column_name,
-            sample_row.get(diff_col.column_name),
+          diff_per_col.map((col_diff) => [
+            col_diff.column_name,
+            sample_row.get(col_diff.column_name),
           ]),
         ),
     );
@@ -98,11 +138,17 @@ function DiffReport() {
   );
 }
 
-function Title({ report_title, diff_summary }) {
+Title.propTypes = {
+  report_title: PropTypes.string.isRequired,
+};
+function Title({ report_title }) {
   return <h1 className="report_title">{report_title}</h1>;
 }
 
-function SchemaDiffReport({ report_title, diff_summary }) {
+SchemaDiffReport.propTypes = {
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+};
+function SchemaDiffReport({ diff_summary }) {
   return (
     <React.Fragment>
       <div className={`box ${diff_summary.same_schema ? "green" : "red"}`}>
@@ -124,6 +170,9 @@ function SchemaDiffReport({ report_title, diff_summary }) {
   );
 }
 
+SameSchemaDetails.propTypes = {
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+};
 function SameSchemaDetails({ diff_summary }) {
   return (
     <div className="content" style={{ display: "none" }}>
@@ -165,6 +214,10 @@ function SameSchemaDetails({ diff_summary }) {
   );
 }
 
+SameSchemaDetailsRow.propTypes = {
+  line: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+};
 function SameSchemaDetailsRow({ line, id }) {
   return (
     <tr>
@@ -184,6 +237,9 @@ function SameSchemaDetailsRow({ line, id }) {
   );
 }
 
+DiffSchemaDetails.propTypes = {
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+};
 function DiffSchemaDetails({ diff_summary }) {
   const schemaDiffStr =
     "--- Schema\n+++ Schema\n" + diff_summary.schema_diff_str;
@@ -215,6 +271,13 @@ function DiffSchemaDetails({ diff_summary }) {
   );
 }
 
+DataDiffReport.propTypes = {
+  report_title: PropTypes.string.isRequired,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  diff_per_col: PropTypes.arrayOf(CustomPropTypes.col_diff).isRequired,
+  on_select_diff_detail_row: PropTypes.func.isRequired,
+  sample_rows: PropTypes.arrayOf(CustomPropTypes.sample_row),
+};
 function DataDiffReport({
   report_title,
   diff_summary,
@@ -255,6 +318,11 @@ function DataDiffReport({
   );
 }
 
+DataDiffTable.propTypes = {
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  diff_per_col: PropTypes.arrayOf(CustomPropTypes.col_diff).isRequired,
+  on_select_diff_detail_row: PropTypes.func.isRequired,
+};
 function DataDiffTable({
   diff_summary,
   diff_per_col,
@@ -283,6 +351,11 @@ function DataDiffTable({
   );
 }
 
+ColumnDiff.propTypes = {
+  col_diff: CustomPropTypes.col_diff.isRequired,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  on_select_diff_detail_row: PropTypes.func.isRequired,
+};
 function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
   function sortDiffArray(array) {
     return array.sort((a, b) => {
@@ -342,12 +415,6 @@ function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
     only_in_right_element,
   ];
 
-  const title =
-    `${no_change_element.name}: ${no_change_element.count} (${no_change_element.pct} %)\n` +
-    `${changed_element.name}: ${changed_element.count} (${changed_element.pct} %)\n` +
-    `${only_in_left_element.name}: ${only_in_left_element.count} (${only_in_left_element.pct} %)\n` +
-    `${only_in_right_element.name}: ${only_in_right_element.count} (${only_in_right_element.pct} %)`;
-
   const no_change = col_diff.counts.no_change === col_diff.counts.total;
 
   return (
@@ -369,6 +436,12 @@ function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
   );
 }
 
+ColumnDiffRow.propTypes = {
+  col_diff: CustomPropTypes.col_diff.isRequired,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  elements: PropTypes.arrayOf(PropTypes.object).isRequired,
+  no_change: PropTypes.bool.isRequired,
+};
 function ColumnDiffRow({ col_diff, diff_summary, elements, no_change }) {
   return (
     <tr
@@ -413,6 +486,10 @@ function ColumnDiffRow({ col_diff, diff_summary, elements, no_change }) {
   );
 }
 
+ChartBar.propTypes = {
+  element: PropTypes.object,
+  col_diff: CustomPropTypes.col_diff.isRequired,
+};
 function ChartBar({ element, col_diff }) {
   return (
     <td
@@ -427,6 +504,10 @@ function ChartBar({ element, col_diff }) {
   );
 }
 
+ChartBarTooltip.propTypes = {
+  element: PropTypes.object,
+  col_diff: CustomPropTypes.col_diff,
+};
 function ChartBarTooltip({ element }) {
   return (
     <tr>
@@ -437,6 +518,13 @@ function ChartBarTooltip({ element }) {
   );
 }
 
+DetailsTable.propTypes = {
+  col_diff: CustomPropTypes.col_diff.isRequired,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  elements: PropTypes.arrayOf(PropTypes.object).isRequired,
+  no_change: PropTypes.bool.isRequired,
+  on_select_diff_detail_row: PropTypes.func.isRequired,
+};
 function DetailsTable({
   col_diff,
   diff_summary,
@@ -448,6 +536,7 @@ function DetailsTable({
     <tr
       key={col_diff.column_name}
       className={`details${no_change ? " no_change" : ""}`}
+      // eslint-disable-next-line react/no-unknown-property
       column_name={col_diff.column_name}
     >
       <td colSpan="4">
@@ -469,6 +558,12 @@ function DetailsTable({
   );
 }
 
+ElementDetails.propTypes = {
+  col_diff: CustomPropTypes.col_diff.isRequired,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  element: PropTypes.object.isRequired,
+  on_select_diff_detail_row: PropTypes.func.isRequired,
+};
 function ElementDetails({
   col_diff,
   diff_summary,
@@ -507,9 +602,9 @@ function ElementDetails({
           {element.diff.map((diff_row, id) => (
             <DiffDetailRow
               key={id}
-              element={element}
               col_diff={col_diff}
               diff_row={diff_row}
+              element={element}
               on_select_diff_detail_row={on_select_diff_detail_row}
             />
           ))}
@@ -519,10 +614,16 @@ function ElementDetails({
   );
 }
 
+DiffDetailRow.propTypes = {
+  col_diff: CustomPropTypes.col_diff.isRequired,
+  diff_row: CustomPropTypes.diff_row.isRequired,
+  element: PropTypes.object.isRequired,
+  on_select_diff_detail_row: PropTypes.func.isRequired,
+};
 function DiffDetailRow({
-  element,
   col_diff,
   diff_row,
+  element,
   on_select_diff_detail_row,
 }) {
   const diff_row_pct = ((diff_row.nb / col_diff.counts.total) * 100).toFixed(2);
@@ -565,6 +666,9 @@ function DiffDetailRow({
   );
 }
 
+DiffDetailRowChanged.propTypes = {
+  diff_row: CustomPropTypes.diff_row.isRequired,
+};
 function DiffDetailRowChanged({ diff_row }) {
   let char_diff = null;
   let left = format_value(diff_row.left_value);
@@ -586,6 +690,10 @@ function DiffDetailRowChanged({ diff_row }) {
   );
 }
 
+DiffDetailRowValue.propTypes = {
+  element: PropTypes.object.isRequired,
+  diff_row: CustomPropTypes.diff_row.isRequired,
+};
 function DiffDetailRowValue({ element, diff_row }) {
   switch (element.type) {
     case "no_change":
@@ -628,6 +736,10 @@ function format_value(sample_value) {
   }
 }
 
+SampleDataTable.propTypes = {
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
+  sample_rows: PropTypes.arrayOf(CustomPropTypes.sample_row),
+};
 function SampleDataTable({ diff_summary, sample_rows }) {
   if (!sample_rows) {
     // Data is still being fetched, render a loading state or return null
@@ -657,6 +769,9 @@ function SampleDataTable({ diff_summary, sample_rows }) {
   );
 }
 
+SampleDataRowVertical.propTypes = {
+  sample_row: CustomPropTypes.sample_row.isRequired,
+};
 function SampleDataRowVertical({ sample_row }) {
   return (
     <React.Fragment>
@@ -671,6 +786,10 @@ function SampleDataRowVertical({ sample_row }) {
   );
 }
 
+LeftDiff.propTypes = {
+  char_diff: PropTypes.arrayOf(CustomPropTypes.char_diff_change),
+  className: PropTypes.string,
+};
 function LeftDiff({ char_diff, className = "" }) {
   if (char_diff) {
     const has_change = char_diff.some(
@@ -690,6 +809,10 @@ function LeftDiff({ char_diff, className = "" }) {
   }
 }
 
+RightDiff.propTypes = {
+  char_diff: PropTypes.arrayOf(CustomPropTypes.char_diff_change),
+  className: PropTypes.string,
+};
 function RightDiff({ char_diff, className = "" }) {
   if (char_diff) {
     const has_change = char_diff.some(
@@ -711,6 +834,9 @@ function RightDiff({ char_diff, className = "" }) {
   }
 }
 
+LeftDiffPart.propTypes = {
+  change: CustomPropTypes.char_diff_change,
+};
 function LeftDiffPart({ change }) {
   if (change) {
     if (change.added) {
@@ -724,6 +850,9 @@ function LeftDiffPart({ change }) {
   return "";
 }
 
+RightDiffPart.propTypes = {
+  change: CustomPropTypes.char_diff_change,
+};
 function RightDiffPart({ change }) {
   if (change) {
     if (change.removed) {
@@ -737,6 +866,10 @@ function RightDiffPart({ change }) {
   return "";
 }
 
+SampleDataRowVerticalCell.propTypes = {
+  col_name: PropTypes.string.isRequired,
+  col_diff: CustomPropTypes.col_diff,
+};
 function SampleDataRowVerticalCell({ col_name, col_diff }) {
   let char_diff = null;
   if (col_diff) {
@@ -756,7 +889,7 @@ function SampleDataRowVerticalCell({ col_name, col_diff }) {
     <tr
       className={
         "SampleDataRowVerticalCell" +
-        (current_column_with_diff_detail == col_name ? " selected" : "") +
+        (current_column_with_diff_detail === col_name ? " selected" : "") +
         (char_diff ? "" : " missing")
       }
     >
@@ -767,6 +900,9 @@ function SampleDataRowVerticalCell({ col_name, col_diff }) {
   );
 }
 
+SampleDataCell.propTypes = {
+  value: PropTypes.string.isRequired,
+};
 function SampleDataCell({ value }) {
   return <td>{value}</td>;
 }
