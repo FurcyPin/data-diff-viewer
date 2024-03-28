@@ -53,8 +53,8 @@ export function toggleColumnDetails(columnName) {
   let detailsElements = document.querySelectorAll(".details");
   // Toggle their visibility
   for (let element of detailsElements) {
-    if (element.getAttribute("column_name") == columnName) {
-      if (element.style.display != "table-row") {
+    if (element.getAttribute("column_name") === columnName) {
+      if (element.style.display !== "table-row") {
         element.style.display = "table-row";
       } else {
         element.style.display = "none";

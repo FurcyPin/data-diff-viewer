@@ -1,8 +1,8 @@
+import React from "react";
 import ReactDOM from "react-dom/client";
 
 import "./index.css";
 import DiffReport from "./react_components";
-import reportWebVitals from "./reportWebVitals";
 
 window.addEventListener("DOMContentLoaded", function (e) {
   ReactDOM.createRoot(document.getElementById("root")).render(
