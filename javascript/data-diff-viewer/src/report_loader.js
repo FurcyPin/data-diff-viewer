@@ -33,7 +33,7 @@ async function _load_duck_db() {
   // Load the report database
   const dbBytes = base64ToUint8Array(db_base64);
   await db.registerFileBuffer("diff_report.db", dbBytes);
-  await db.open({ path: `diff_report.db` });
+  await db.open({ path: "diff_report.db" });
   const conn = await db.connect();
 
   return conn;
