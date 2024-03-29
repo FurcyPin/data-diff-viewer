@@ -41,6 +41,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
 
+      # Python #
       - name: Install project
         run: poetry install
 
@@ -50,6 +51,15 @@ jobs:
         run: poetry run mypy ${{ env.PROJECT_NAME }}
       - name: Security safety
         run: poetry run safety check
+
+      # Javascript #
+      - name: Install nodejs
+        run: dev/bin/clean_install_npm.sh
+
+      - name: Linter eslint
+        run: |
+          cd javascript/data-diff-viewer
+          npm run lint
 
       - name: Build html template
         run: dev/bin/build_html_template.sh
