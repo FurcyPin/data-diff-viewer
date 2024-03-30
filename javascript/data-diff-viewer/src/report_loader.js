@@ -87,6 +87,7 @@ async function _get_diff_per_col(conn) {
     "SELECT column_number, column_name, counts, diff FROM diff_per_col",
   );
   const diff_per_col = JSON.parse(diff_per_col_sql_result.toString());
+  diff_per_col.sort((c1, c2) => c1.column_number - c2.column_number);
   return diff_per_col;
 }
 

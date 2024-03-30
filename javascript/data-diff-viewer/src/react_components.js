@@ -340,7 +340,7 @@ function DataDiffTable({
       <tbody className="DataDiffTable_tbody">
         {diff_per_col.map((col_diff, id) => (
           <ColumnDiff
-            key={id}
+            key={col_diff.column_number}
             col_diff={col_diff}
             diff_summary={diff_summary}
             on_select_diff_detail_row={on_select_diff_detail_row}
