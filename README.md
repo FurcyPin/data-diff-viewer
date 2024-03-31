@@ -152,6 +152,10 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 ### v0.3.0
 
+Improvements:
+- Several improvements in the way the results are displayed.
+- Optimized performances.
+
 New features:
 - We can now display sample rows when we click on one of the "most frequent value/change".
 
