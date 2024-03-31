@@ -12,6 +12,18 @@ var current_diff_detail_row = null;
 var current_column_with_diff_detail = null;
 
 class CustomPropTypes {
+  static customType(expectedType) {
+    return (propValue, key, componentName, location, propFullName) => {
+      let actualType = typeof propValue[key];
+      if (actualType !== expectedType) {
+        return new Error(
+          `Invalid prop \`${propFullName}\` of type \`${actualType}\` supplied to \`${componentName}\`, ` +
+            `expected \`${expectedType}\`.`,
+        );
+      }
+    };
+  }
+
   static diff_summary = PropTypes.shape({
     column_names_diff: PropTypes.object.isRequired,
     join_cols: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -28,29 +40,29 @@ class CustomPropTypes {
     added: PropTypes.bool,
   });
   static sample_row = PropTypes.instanceOf(Map);
-  static col_diff = PropTypes.shape({
-    column_name: PropTypes.string.isRequired,
-    column_number: PropTypes.number.isRequired,
-    counts: PropTypes.shape({
-      changed: PropTypes.number.isRequired,
-      no_change: PropTypes.number.isRequired,
-      only_in_left: PropTypes.number.isRequired,
-      only_in_right: PropTypes.number.isRequired,
-      total: PropTypes.number.isRequired,
-    }),
-    diff: PropTypes.shape({
-      changed: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
-      no_change: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
-      only_in_left: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
-      only_in_right: PropTypes.arrayOf(CustomPropTypes.diff_row).isRequired,
-    }),
-  });
   static diff_row = PropTypes.shape({
     value: PropTypes.any,
     left_value: PropTypes.any,
     right_value: PropTypes.any,
-    nb: PropTypes.number.isRequired,
-    sample_ids: PropTypes.arrayOf(PropTypes.string),
+    nb: CustomPropTypes.customType("bigint"),
+    sample_ids: PropTypes.object,
+  });
+  static col_diff = PropTypes.shape({
+    column_name: PropTypes.string.isRequired,
+    column_number: PropTypes.number.isRequired,
+    counts: PropTypes.shape({
+      changed: CustomPropTypes.customType("bigint"),
+      no_change: CustomPropTypes.customType("bigint"),
+      only_in_left: CustomPropTypes.customType("bigint"),
+      only_in_right: CustomPropTypes.customType("bigint"),
+      total: CustomPropTypes.customType("bigint"),
+    }),
+    diff: PropTypes.shape({
+      changed: PropTypes.object.isRequired,
+      no_change: PropTypes.object.isRequired,
+      only_in_left: PropTypes.object.isRequired,
+      only_in_right: PropTypes.object.isRequired,
+    }),
   });
 }
 
@@ -102,7 +114,7 @@ function DiffReport() {
     }
     let sample_data = await report_loader.getSampleData(
       sampleTableNames,
-      selected_diff_row["sample_ids"],
+      selected_diff_row["sample_ids"].toArray(),
     );
     let sample_rows_sorted_by_column = sample_data.map(
       (sample_row) =>
@@ -358,8 +370,8 @@ ColumnDiff.propTypes = {
 };
 function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
   function sortDiffArray(array) {
-    return array.sort((a, b) => {
-      return b.nb - a.nb;
+    return array.toArray().sort((a, b) => {
+      return Number(b.nb) - Number(a.nb);
     });
   }
 
@@ -367,43 +379,50 @@ function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
     type: "no_change",
     name: "Not changed",
     desc: "Number of values that did not change",
-    count: col_diff.counts.no_change,
+    count: Number(col_diff.counts.no_change),
     diff: sortDiffArray(col_diff.diff.no_change),
     top_title: "Most frequent identical values",
-    pct: ((col_diff.counts.no_change / col_diff.counts.total) * 100).toFixed(2),
+    pct: (
+      (Number(col_diff.counts.no_change) / Number(col_diff.counts.total)) *
+      100
+    ).toFixed(2),
     color: "green",
   };
   const changed_element = {
     type: "changed",
     name: "Changed",
     desc: "Number of values that changed",
-    count: col_diff.counts.changed,
+    count: Number(col_diff.counts.changed),
     diff: sortDiffArray(col_diff.diff.changed),
     top_title: "Most frequent changes",
-    pct: ((col_diff.counts.changed / col_diff.counts.total) * 100).toFixed(2),
+    pct: (
+      (Number(col_diff.counts.changed) / Number(col_diff.counts.total)) *
+      100
+    ).toFixed(2),
     color: "red",
   };
   const only_in_left_element = {
     type: "only_in_left",
     name: "Only in " + diff_summary.left_df_alias,
     desc: "Number of values only in " + diff_summary.left_df_alias,
-    count: col_diff.counts.only_in_left,
+    count: Number(col_diff.counts.only_in_left),
     diff: sortDiffArray(col_diff.diff.only_in_left),
     top_title: "Most frequent values in " + diff_summary.left_df_alias,
-    pct: ((col_diff.counts.only_in_left / col_diff.counts.total) * 100).toFixed(
-      2,
-    ),
+    pct: (
+      (Number(col_diff.counts.only_in_left) / Number(col_diff.counts.total)) *
+      100
+    ).toFixed(2),
     color: "blue",
   };
   const only_in_right_element = {
     type: "only_in_right",
     name: "Only in " + diff_summary.right_df_alias,
     desc: "Number of values only in " + diff_summary.right_df_alias,
-    count: col_diff.counts.only_in_right,
+    count: Number(col_diff.counts.only_in_right),
     diff: sortDiffArray(col_diff.diff.only_in_right),
     top_title: "Most frequent values in " + diff_summary.right_df_alias,
     pct: (
-      (col_diff.counts.only_in_right / col_diff.counts.total) *
+      (Number(col_diff.counts.only_in_right) / Number(col_diff.counts.total)) *
       100
     ).toFixed(2),
     color: "purple",
@@ -570,7 +589,7 @@ function ElementDetails({
   element,
   on_select_diff_detail_row,
 }) {
-  if (element.count === "0") {
+  if (element.count === 0) {
     return <React.Fragment />;
   }
   return (
@@ -626,7 +645,10 @@ function DiffDetailRow({
   element,
   on_select_diff_detail_row,
 }) {
-  const diff_row_pct = ((diff_row.nb / col_diff.counts.total) * 100).toFixed(2);
+  const diff_row_pct = (
+    (Number(diff_row.nb) / Number(col_diff.counts.total)) *
+    100
+  ).toFixed(2);
 
   return (
     <tr
@@ -642,7 +664,7 @@ function DiffDetailRow({
     >
       <React.Fragment>
         <DiffDetailRowValue element={element} diff_row={diff_row} />
-        <td className="top_col_table_div">{diff_row.nb}</td>
+        <td className="top_col_table_div">{Number(diff_row.nb)}</td>
         <td className="top_col_table_div">
           <table className="top_col_bar_table">
             <tbody>
