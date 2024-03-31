@@ -219,6 +219,7 @@ button.active {
 /* Define the style for the table */
 .top_col_table {
 /*  border: 2px solid transparent; */
+  table-layout: fixed;
   border-top: 2px solid lightgrey;
   border-collapse: collapse;
   margin: 0 auto;
@@ -249,8 +250,8 @@ button.active {
 
 /* Define the style for the bar charts */
 .top_col_table_div {
+  word-break: break-word;
   padding-right: 10px;
-  white-space: nowrap;
 }
 
 /* Define the style for the bar charts */
