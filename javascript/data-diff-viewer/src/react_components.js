@@ -112,20 +112,13 @@ function DiffReport() {
       clicked_diff_detail_row.classList.toggle("selected");
       current_diff_detail_row = clicked_diff_detail_row;
     }
+    let column_names = diff_per_col.map((col_diff) => col_diff.column_name);
     let sample_data = await report_loader.getSampleData(
       sampleTableNames,
       selected_diff_row["sample_ids"].toArray(),
+      column_names,
     );
-    let sample_rows_sorted_by_column = sample_data.map(
-      (sample_row) =>
-        new Map(
-          diff_per_col.map((col_diff) => [
-            col_diff.column_name,
-            sample_row.get(col_diff.column_name),
-          ]),
-        ),
-    );
-    setSampleRows(sample_rows_sorted_by_column);
+    setSampleRows(sample_data);
   };
 
   if (!diffData) {
@@ -747,16 +740,13 @@ function DiffDetailRowValue({ element, diff_row }) {
 }
 
 function format_value(sample_value) {
-  if(sample_value === null){
+  if (sample_value === null) {
     return "NULL";
-  }
-  else if (typeof sample_value === "object") {
+  } else if (typeof sample_value === "object") {
     return sample_value.toJSON().toString();
-  }
-  else if (typeof sample_value === "string") {
+  } else if (typeof sample_value === "string") {
     return `"${sample_value}"`;
-  }
-  else {
+  } else {
     return sample_value.toString();
   }
 }
@@ -770,7 +760,6 @@ function SampleDataTable({ diff_summary, sample_rows }) {
     // Data is still being fetched, render a loading state or return null
     return;
   }
-
   return (
     <React.Fragment>
       <div className="box blue">
@@ -898,8 +887,8 @@ SampleDataRowVerticalCell.propTypes = {
 function SampleDataRowVerticalCell({ col_name, col_diff }) {
   let char_diff = null;
   if (col_diff) {
-    let left = format_value(col_diff.left_value);
-    let right = format_value(col_diff.right_value);
+    let left = format_value(col_diff.get(0).left_value);
+    let right = format_value(col_diff.get(0).right_value);
     if ((col_diff.left_value == null) ^ (col_diff.right_value == null)) {
       char_diff = [
         { removed: true, value: left },
