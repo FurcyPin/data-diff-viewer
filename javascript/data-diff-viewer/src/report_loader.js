@@ -115,35 +115,38 @@ export const load_diff_report = cacheResult(
   _load_diff_report,
 );
 
-async function _get_sample_table(sampleTableName, sampleIds, conn) {
+async function _getSampleTable(sampleTableName, sampleIds, conn) {
   const query_string = `SELECT * FROM ${sampleTableName} WHERE __SAMPLE_ID__ = '${sampleIds}' LIMIT 1`;
   const sampleResult = await conn.query(query_string);
-  const sample = sampleResult.toArray().map((r) => {
-    const row = r.toJSON();
-    return row;
-  });
-  return sample;
+  return sampleResult;
 }
 
-export async function getSampleData(sampleTableNames, sampleIds) {
+function getSampleForColumn(columnName, results) {
+  columnName = columnName
+    .replaceAll(".", "__STRUCT__")
+    .replaceAll("!", "__ARRAY__");
+  for (var i = 0; i < results.length; i++) {
+    if (results[i].schema.names.includes(columnName)) {
+      return results[i].getChild(columnName);
+    }
+  }
+}
+
+export async function getSampleData(sampleTableNames, sampleIds, columnNames) {
   let conn = await get_or_create_duckdb();
   const sampleTablePromises = sampleTableNames.map((sampleTableName, id) =>
-    _get_sample_table(sampleTableName, sampleIds[id], conn),
+    _getSampleTable(sampleTableName, sampleIds[id], conn),
   );
   const settledPromises = await Promise.allSettled(sampleTablePromises);
-  const result = settledPromises.map((promise) => promise.value).flat();
-  /* Merge all promises together */
-  const reduced_result = [{}]
-    .concat(result)
-    .reduce((p, c) => Object.assign(p, c));
+  const results = settledPromises.map((promise) => promise.value).flat();
 
-  const cleaned_result = new Map(
-    Object.keys(reduced_result).map((col_name) => [
-      col_name.replaceAll("__STRUCT__", ".").replaceAll("__ARRAY__", "!"),
-      reduced_result[col_name],
+  const sortedResults = new Map(
+    columnNames.map((columnName) => [
+      columnName,
+      getSampleForColumn(columnName, results),
     ]),
   );
-  return [cleaned_result];
+  return [sortedResults];
 }
 
 /* Cache the result of a function to avoid recomputing it */
