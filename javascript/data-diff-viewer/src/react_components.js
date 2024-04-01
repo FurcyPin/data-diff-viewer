@@ -747,14 +747,17 @@ function DiffDetailRowValue({ element, diff_row }) {
 }
 
 function format_value(sample_value) {
-  if (typeof sample_value === "object" && sample_value !== null) {
-    return JSON.stringify(sample_value);
-  } else if (typeof sample_value === "string" && sample_value !== null) {
-    return `"${sample_value}"`;
-  } else if (sample_value !== null) {
-    return sample_value.toString();
-  } else {
+  if(sample_value === null){
     return "NULL";
+  }
+  else if (typeof sample_value === "object") {
+    return sample_value.toJSON().toString();
+  }
+  else if (typeof sample_value === "string") {
+    return `"${sample_value}"`;
+  }
+  else {
+    return sample_value.toString();
   }
 }
 
