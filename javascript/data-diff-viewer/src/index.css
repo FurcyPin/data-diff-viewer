@@ -191,9 +191,10 @@ button.active {
 }
 
 .DetailsTable {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   justify-content: center;
+  overflow-x: hidden;
   overflow-y: auto;
   max-height: 500px;
 }
@@ -201,7 +202,7 @@ button.active {
 /* top_cols_container: collapsible container for the top_cols_table */
 .top_cols_container {
   width: auto;
-  display: inline-flex;
+  display: -webkit-box;
 }
 
 .top_cols_container_side_filler {
@@ -240,17 +241,20 @@ button.active {
 
 /* Define the style for the bar charts */
 .top_col_table_row {
-  border: 2px solid transparent;
+  border: 1px solid transparent;
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
 }
 
 /* Define the style for the bar charts */
 .top_col_table_row.selected{
-  border: 2px double brown;
+  border: 1px double brown;
 }
 
 /* Define the style for the bar charts */
-.top_col_table_div {
-  word-break: break-word;
+.top_col_table_div.value{
+  min-width: 200px;
+  word-break: break-any;
   padding-right: 10px;
 }
 
