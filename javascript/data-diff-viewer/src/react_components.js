@@ -705,9 +705,9 @@ function DiffDetailRowChanged({ diff_row }) {
   }
   return (
     <React.Fragment>
-      <LeftDiff char_diff={char_diff} className="top_col_table_div" />
+      <LeftDiff char_diff={char_diff} className="top_col_table_div value" />
       <td className="top_col_table_div">&#10132;</td>
-      <RightDiff char_diff={char_diff} className="top_col_table_div" />
+      <RightDiff char_diff={char_diff} className="top_col_table_div value" />
     </React.Fragment>
   );
 }
@@ -720,7 +720,7 @@ function DiffDetailRowValue({ element, diff_row }) {
   switch (element.type) {
     case "no_change":
       return (
-        <td className="top_col_table_div">
+        <td className="top_col_table_div value">
           {diff_row.value == null ? <i>NULL</i> : format_value(diff_row.value)}
         </td>
       );
@@ -730,14 +730,14 @@ function DiffDetailRowValue({ element, diff_row }) {
 
     case "only_in_left":
       return (
-        <td className="top_col_table_div">
+        <td className="top_col_table_div value">
           {diff_row.value == null ? <i>NULL</i> : format_value(diff_row.value)}
         </td>
       );
 
     case "only_in_right":
       return (
-        <td className="top_col_table_div">
+        <td className="top_col_table_div value">
           {diff_row.value == null ? <i>NULL</i> : format_value(diff_row.value)}
         </td>
       );
