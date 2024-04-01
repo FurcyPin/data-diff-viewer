@@ -25,9 +25,9 @@ function _updateVisibility(element) {
   }
 
   if (should_display) {
-    element.style.display = "table-row";
+    element.classList.add("visible");
   } else {
-    element.style.display = "none";
+    element.classList.remove("visible");
   }
 }
 
@@ -54,10 +54,10 @@ export function toggleColumnDetails(columnName) {
   // Toggle their visibility
   for (let element of detailsElements) {
     if (element.getAttribute("column_name") === columnName) {
-      if (element.style.display !== "table-row") {
-        element.style.display = "table-row";
+      if (!element.classList.contains("visible")) {
+        element.classList.add("visible");
       } else {
-        element.style.display = "none";
+        element.classList.remove("visible");
       }
     }
   }
