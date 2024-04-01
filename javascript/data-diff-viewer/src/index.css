@@ -30,7 +30,7 @@ code {
 
 .main {
   margin: 0 auto;
-  max-width: 2000px;
+  max-width: auto;
   text-align: center;
   border-spacing: 2px;
 }
@@ -105,13 +105,13 @@ code {
 }
 
 /* Define the style for columns with no change */
-.no_change {
-  display: 'table-row';
+.details {
+  display: none;
 }
 
-/* Define the style for columns with no change */
-.details {
-  display: none;  
+.details.visible{
+  display: contents;
+  justify-content: center;
 }
 
 
@@ -148,7 +148,6 @@ code {
   table-layout: fixed;
   width: 100%;
   flex: auto;
-  /*max-width: 500px;*/
   border-collapse: collapse;
 }
 
@@ -163,12 +162,13 @@ code {
 
 .chart_bar_table_tooltip_text {
   visibility: hidden;
-  flex: auto;
+  width: max-content;
   background-color: #ddd;
   color: #333;
   text-align: left;
   border-radius: 6px;
   padding: 5px 5px;
+  word-break: keep-all;
 
   /* Position the tooltip */
   position: absolute;
@@ -191,26 +191,20 @@ button.active {
 }
 
 .DetailsTable {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: 500px;
 }
 
 /* top_cols_container: collapsible container for the top_cols_table */
 .top_cols_container {
-  width: auto;
-  display: -webkit-box;
-}
-
-.top_cols_container_side_filler {
-  width: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+  max-height: 500px;
+  display: flex;
 }
 
 .top_col_table_container {
-  border: 2px solid lightgrey;
   margin-left: 2px;
   margin-right: 2px;
   box-sizing: border-box;
@@ -219,15 +213,12 @@ button.active {
 /* top_col_table: table displaying the most frequent column values/changes */
 /* Define the style for the table */
 .top_col_table {
-/*  border: 2px solid transparent; */
+  border: 2px solid lightgrey;
   table-layout: fixed;
   border-top: 2px solid lightgrey;
   border-collapse: collapse;
   margin: 0 auto;
   border-spacing: 2px;
-/*  overflow-y: auto; */
-/*  overflow-x: hidden; */
-/*  max-height: 500px; */
 }
 
 /* Define the style for the header */
@@ -254,7 +245,7 @@ button.active {
 /* Define the style for the bar charts */
 .top_col_table_div.value{
   min-width: 200px;
-  word-break: break-any;
+  word-break: break-word;
   padding-right: 10px;
 }
 
