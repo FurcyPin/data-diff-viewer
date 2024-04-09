@@ -775,7 +775,11 @@ function SampleDataTable({ diff_summary, sample_rows }) {
         </thead>
         <tbody>
           {sample_rows.map((sample_row, id) => (
-            <SampleDataRowVertical key={id} sample_row={sample_row} />
+            <SampleDataRowVertical
+              key={id}
+              sample_row={sample_row}
+              diff_summary={diff_summary}
+            />
           ))}
         </tbody>
       </table>
@@ -785,8 +789,9 @@ function SampleDataTable({ diff_summary, sample_rows }) {
 
 SampleDataRowVertical.propTypes = {
   sample_row: CustomPropTypes.sample_row.isRequired,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
 };
-function SampleDataRowVertical({ sample_row }) {
+function SampleDataRowVertical({ sample_row, diff_summary }) {
   return (
     <React.Fragment>
       {Array.from(sample_row.entries()).map(([col_name, col_diff], id) => (
@@ -794,6 +799,7 @@ function SampleDataRowVertical({ sample_row }) {
           key={id}
           col_name={col_name}
           col_diff={col_diff}
+          diff_summary={diff_summary}
         />
       ))}
     </React.Fragment>
@@ -883,8 +889,9 @@ function RightDiffPart({ change }) {
 SampleDataRowVerticalCell.propTypes = {
   col_name: PropTypes.string.isRequired,
   col_diff: CustomPropTypes.col_diff,
+  diff_summary: CustomPropTypes.diff_summary.isRequired,
 };
-function SampleDataRowVerticalCell({ col_name, col_diff }) {
+function SampleDataRowVerticalCell({ col_name, col_diff, diff_summary }) {
   let char_diff = null;
   if (col_diff) {
     let left = format_value(col_diff.get(0).left_value);
@@ -907,7 +914,14 @@ function SampleDataRowVerticalCell({ col_name, col_diff }) {
         (char_diff ? "" : " missing")
       }
     >
-      <td className="column_name">{col_name}</td>
+      <td
+        className={
+          "column_name " +
+          (diff_summary.join_cols.includes(col_name) ? " join_column_name" : "")
+        }
+      >
+        {col_name}
+      </td>
       <LeftDiff char_diff={char_diff} />
       <RightDiff char_diff={char_diff} />
     </tr>
