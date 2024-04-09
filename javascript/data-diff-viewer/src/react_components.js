@@ -547,7 +547,7 @@ function DetailsTable({
   return (
     <tr
       key={col_diff.column_name}
-      className={`details${no_change ? " no_change" : ""}`}
+      className={`details collapsed ${no_change ? "no_change" : ""}`}
       // eslint-disable-next-line react/no-unknown-property
       column_name={col_diff.column_name}
     >

@@ -12,22 +12,21 @@ export function toggleShowSchema(showSchemaButton) {
 var bool_toggleHideColumnsWithNoChange = false;
 var bool_toggleExpandAllDetails = false;
 
-function _updateVisibility(element) {
-  var should_display = true;
-  if (element.classList.contains("details") && !bool_toggleExpandAllDetails) {
-    should_display = false;
-  }
-  if (
-    element.classList.contains("no_change") &&
-    bool_toggleHideColumnsWithNoChange
-  ) {
-    should_display = false;
-  }
-
-  if (should_display) {
-    element.classList.add("visible");
+function _updateHidden(element) {
+  var should_hide = bool_toggleHideColumnsWithNoChange;
+  if (should_hide) {
+    element.classList.add("hidden");
   } else {
-    element.classList.remove("visible");
+    element.classList.remove("hidden");
+  }
+}
+
+function _updateCollapsed(element) {
+  var should_collapse = !bool_toggleExpandAllDetails;
+  if (should_collapse) {
+    element.classList.add("collapsed");
+  } else {
+    element.classList.remove("collapsed");
   }
 }
 
@@ -45,7 +44,7 @@ export function toggleHideColumnsWithNoChange() {
     bool_toggleHideColumnsWithNoChange = true;
     button.classList.add("active");
   }
-  noChangeElements.forEach(_updateVisibility);
+  noChangeElements.forEach(_updateHidden);
 }
 
 export function toggleColumnDetails(columnName) {
@@ -54,10 +53,10 @@ export function toggleColumnDetails(columnName) {
   // Toggle their visibility
   for (let element of detailsElements) {
     if (element.getAttribute("column_name") === columnName) {
-      if (!element.classList.contains("visible")) {
-        element.classList.add("visible");
+      if (!element.classList.contains("collapsed")) {
+        element.classList.add("collapsed");
       } else {
-        element.classList.remove("visible");
+        element.classList.remove("collapsed");
       }
     }
   }
@@ -76,5 +75,5 @@ export function toggleExpandAllDetails(columnName) {
     bool_toggleExpandAllDetails = true;
     button.classList.add("active");
   }
-  detailsElements.forEach(_updateVisibility);
+  detailsElements.forEach(_updateCollapsed);
 }

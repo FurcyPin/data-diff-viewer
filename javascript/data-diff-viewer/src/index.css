@@ -106,12 +106,16 @@ code {
 
 /* Define the style for columns with no change */
 .details {
+  display: contents;
+  justify-content: center;
+}
+
+.details.hidden{
   display: none;
 }
 
-.details.visible{
-  display: contents;
-  justify-content: center;
+.details.collapsed{
+  display: none;
 }
 
 
@@ -126,7 +130,11 @@ code {
 
 
 .ColumnDiffRow {
+  display: table-row;
+}
 
+.ColumnDiffRow.hidden{
+  display: none;
 }
 
 .ColumnDiffRow_td.column_name {
