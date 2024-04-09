@@ -88,7 +88,7 @@ async function _get_diff_per_col(conn) {
   );
   const diff_per_col = diff_per_col_sql_result
     .toArray()
-    .sort((c1, c2) => c1.column_number - c2.column_number);
+    .sort((c1, c2) => Number(c1.column_number) - Number(c2.column_number));
   return diff_per_col;
 }
 
