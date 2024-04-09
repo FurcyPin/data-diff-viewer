@@ -893,7 +893,7 @@ SampleDataRowVerticalCell.propTypes = {
 };
 function SampleDataRowVerticalCell({ col_name, col_diff, diff_summary }) {
   let char_diff = null;
-  if (col_diff) {
+  if (col_diff && col_diff.length > 0) {
     let left = format_value(col_diff.get(0).left_value);
     let right = format_value(col_diff.get(0).right_value);
     if ((col_diff.left_value == null) ^ (col_diff.right_value == null)) {
