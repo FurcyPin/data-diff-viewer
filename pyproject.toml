@@ -77,3 +77,28 @@ addopts = [
 testpaths = [
     "data_diff_viewer"
 ]
+
+[tool.bumpversion]
+current_version = "0.2.0"
+commit = true
+message = "Bump version: {current_version} → {new_version}"
+tag = true
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)(\\.(?P<release>[a-z]+)(?P<dev>\\d+))?"
+serialize = ["{major}.{minor}.{patch}"]
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = "version = \"{current_version}\""
+replace = "version = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "data_diff_viewer/__init__.py"
+search = "__version__ = \"{current_version}\""
+replace = "__version__ = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "javascript/data-diff-viewer/package.json"
+search = "\"version\": \"{current_version}\","
+replace = "\"version\": \"{new_version}\","
