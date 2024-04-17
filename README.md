@@ -150,6 +150,12 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 ## Changelog
 
 
+### v0.3.1 [in progress]
+
+Bugfix:
+- fix crash when the `diff.*` arrays are null.
+
+
 ### v0.3.0
 
 Improvements:

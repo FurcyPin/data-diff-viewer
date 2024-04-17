@@ -363,9 +363,14 @@ ColumnDiff.propTypes = {
 };
 function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
   function sortDiffArray(array) {
-    return array.toArray().sort((a, b) => {
-      return Number(b.nb) - Number(a.nb);
-    });
+    if (array === null) {
+      return [];
+    }
+    else {
+      return array.toArray().sort((a, b) => {
+        return Number(b.nb) - Number(a.nb);
+      });
+    }
   }
 
   const no_change_element = {
