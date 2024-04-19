@@ -13,3 +13,5 @@ rm -f $TARGET_DIR/diff_report.html
 mkdir -p $TARGET_DIR
 cp javascript/data-diff-viewer/build/index.html $TARGET_DIR/diff_report.html
 
+poetry run python dev/bin/inline_javascript_libraries.py
+

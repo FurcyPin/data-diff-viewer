@@ -1,34 +1,110 @@
 import * as duckdb from "@duckdb/duckdb-wasm";
 import db_base64 from "./db_base64.js";
+import * as duckdb_wasm_base64 from "./duckdb_wasm_base64.js";
+
+// Translate a base64 object to Uint8Array
+function base64ToUint8Array(base64) {
+  var binary_string = atob(base64);
+  var len = binary_string.length;
+  var bytes = new Uint8Array(len);
+  for (var i = 0; i < len; i++) {
+    bytes[i] = binary_string.charCodeAt(i);
+  }
+  return bytes;
+}
+
+var duckdb_browser_mvp = null ;
+if (!duckdb_wasm_base64.duckdb_browser_mvp_base64.startsWith("{")) {
+  duckdb_browser_mvp = base64ToUint8Array(duckdb_wasm_base64.duckdb_browser_mvp_base64)
+}
+
+var duckdb_browser_mvp_worker = null ;
+if (!duckdb_wasm_base64.duckdb_browser_mvp_worker_base64.startsWith("{")) {
+  duckdb_browser_mvp_worker = atob(duckdb_wasm_base64.duckdb_browser_mvp_worker_base64)
+}
+
+var duckdb_browser_eh_worker = null ;
+if (!duckdb_wasm_base64.duckdb_browser_eh_worker_base64.startsWith("{")) {
+  duckdb_browser_eh_worker = base64ToUint8Array(duckdb_wasm_base64.duckdb_browser_eh_worker_base64)
+}
+
+var duckdb_browser_eh = null ;
+if (!duckdb_wasm_base64.duckdb_browser_eh_base64.startsWith("{")) {
+  duckdb_browser_eh = atob(duckdb_wasm_base64.duckdb_browser_eh_base64)
+}
+
+const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+
+async function _get_duckdb_connection() {
+  if(duckdb_browser_mvp_worker === null) {
+    // Running in dev mode: we load the libraries from the CDN (jsdelivr).
+    // Select a bundle based on browser checks
+    const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+    const workerUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], {
+        type: "text/javascript",
+      }),
+    );
+    // Instantiate the asynchronus version of DuckDB-wasm
+    const worker = new Worker(workerUrl);
+    const logger = new duckdb.ConsoleLogger();
+    const db = new duckdb.AsyncDuckDB(logger, worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    return db
+  }
+  else {
+    // Running in prod mode: we load the libraries from the base64 encode strings.
+    const MANUAL_BUNDLES = {
+        mvp: {
+            mainModule: URL.createObjectURL(
+              new Blob([duckdb_browser_mvp], {
+                type: "wasm",
+              })
+            ),
+            mainWorker: URL.createObjectURL(
+              new Blob([duckdb_browser_mvp_worker], {
+                type: "text/javascript",
+              })
+            )
+        },
+        eh: {
+            mainModule: URL.createObjectURL(
+              new Blob([duckdb_browser_eh], {
+                type: "wasm",
+              })
+            ),
+            mainWorker: URL.createObjectURL(
+              new Blob([duckdb_browser_eh_worker], {
+                type: "text/javascript",
+              })
+            )
+        },
+    };
+
+    // Select a bundle based on browser checks
+    const bundle = await duckdb.selectBundle(MANUAL_BUNDLES);
+    // Instantiate the asynchronus version of DuckDB-wasm
+    const workerUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], {
+        type: "text/javascript",
+      }),
+    );
+    console.log(bundle);
+    window.bundle = bundle;
+    console.log(workerUrl);
+    console.log(bundle.mainModule);
+    console.log(bundle.mainWorker);
+
+    const worker = new Worker(bundle.mainWorker);
+    const logger = new duckdb.ConsoleLogger();
+    const db = new duckdb.AsyncDuckDB(logger, worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    return db
+  }
+}
 
 async function _load_duck_db() {
-  const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
-
-  // Select a bundle based on browser checks
-  const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
-
-  const worker_url = URL.createObjectURL(
-    new Blob([`importScripts("${bundle.mainWorker}");`], {
-      type: "text/javascript",
-    }),
-  );
-
-  // Instantiate the asynchronus version of DuckDB-wasm
-  const worker = new Worker(worker_url);
-  const logger = new duckdb.ConsoleLogger();
-  const db = new duckdb.AsyncDuckDB(logger, worker);
-  await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
-
-  // Translate a base64 object to Uint8Array
-  function base64ToUint8Array(base64) {
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-      bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes;
-  }
+  const db = await _get_duckdb_connection();
 
   // Load the report database
   const dbBytes = base64ToUint8Array(db_base64);
