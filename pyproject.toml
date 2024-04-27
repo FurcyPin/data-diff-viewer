@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "data-diff-viewer"
-version = "0.3.0"
+version = "0.3.1"
 description = "Generate HTML reports to visualize the results of data-diff with bigquery-frame and spark-frame."
 authors = ["Furcy Pin <pin.furcy@gmail.com>"]
 readme = "README.md"
@@ -79,7 +79,7 @@ testpaths = [
 ]
 
 [tool.bumpversion]
-current_version = "0.3.0"
+current_version = "0.3.1"
 commit = true
 message = "Bump version: {current_version} → {new_version}"
 tag = true
