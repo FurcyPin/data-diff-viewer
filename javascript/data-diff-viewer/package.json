@@ -1,6 +1,6 @@
 {
   "name": "data-diff-viewer",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "dependencies": {
     "@duckdb/duckdb-wasm": "1.28.1-dev179.0",
