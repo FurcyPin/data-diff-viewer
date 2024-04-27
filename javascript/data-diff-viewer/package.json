@@ -3,7 +3,7 @@
   "version": "0.3.1",
   "private": true,
   "dependencies": {
-    "@duckdb/duckdb-wasm": "^1.28.0",
+    "@duckdb/duckdb-wasm": "1.28.1-dev179.0",
     "diff": "^5.2.0",
     "diff2html": "^3.4.47"
   },

@@ -149,6 +149,10 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 ## Changelog
 
+### v0.3.2
+
+Bugfix:
+- fix version incompatibility between duckdb and duckdb-wasm which made it not work for displaying details.
 
 ### v0.3.1
 
