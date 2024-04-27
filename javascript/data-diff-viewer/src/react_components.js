@@ -365,8 +365,7 @@ function ColumnDiff({ col_diff, diff_summary, on_select_diff_detail_row }) {
   function sortDiffArray(array) {
     if (array === null) {
       return [];
-    }
-    else {
+    } else {
       return array.toArray().sort((a, b) => {
         return Number(b.nb) - Number(a.nb);
       });
