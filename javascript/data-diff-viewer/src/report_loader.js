@@ -153,7 +153,7 @@ export async function getSampleData(sampleTableNames, sampleIds, columnNames) {
 let cache = {};
 function cacheResult(fun_name, fun) {
   return async () => {
-    if (!(fun.name in cache)) {
+    if (!(fun_name in cache)) {
       cache[fun_name] = fun();
     }
     return cache[fun_name];
