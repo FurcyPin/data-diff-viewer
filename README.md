@@ -154,6 +154,7 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 Bugfix:
 - fix crash when the `diff.*` arrays are null.
+- fix peformance issue with caching duckdb results.
 
 
 ### v0.3.0
