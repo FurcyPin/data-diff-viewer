@@ -14,9 +14,8 @@ def encode_file_to_base64_string(file_path: Path) -> str:
         a Base64 string
 
     """
-    with file_path.open("rb") as input_file:
-        encoded_string = base64.b64encode(input_file.read())
-        return encoded_string.decode()
+    file_text = file_path.read_bytes()
+    return base64.b64encode(file_text).decode()
 
 
 def read_resource(resource_path: str) -> str:
