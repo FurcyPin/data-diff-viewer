@@ -97,9 +97,6 @@ ignore = [
     # These rules makes sense but there are several cases where working around it makes the code more confusing than less
     # Plus, the spark API does not follow this rule already (for instance, df.show(10, true) works)
 
-    "ANN101", # Missing type annotation for `self` in method
-    # This rule is not necessary when self is automatically infered by smart type checkers
-
     "D100", # Missing docstring in public module
     "D104", # Missing docstring in public package
 ]
