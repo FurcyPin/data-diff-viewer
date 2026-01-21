@@ -3,9 +3,9 @@
   "version": "0.3.2",
   "private": true,
   "dependencies": {
-    "@duckdb/duckdb-wasm": "1.28.1-dev179.0",
-    "diff": "^5.2.0",
-    "diff2html": "^3.4.47"
+    "@duckdb/duckdb-wasm": "1.32.0",
+    "diff": "^8.0.2",
+    "diff2html": "3.4.52"
   },
   "dependenciesComments": {
     "@duckdb/duckdb-wasm": "Used to store and query the diff data.",
