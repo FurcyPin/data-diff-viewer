@@ -1,4 +1,4 @@
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
 from data_diff_viewer.diff_summary import DiffSummary
 from data_diff_viewer.package import generate_report_string
