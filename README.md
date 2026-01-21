@@ -149,6 +149,12 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 ## Changelog
 
+### v0.4
+
+Breaking Changes:
+- Dropped support for Python 3.8 and 3.9
+- Added support for Python 3.13 and 3.14
+
 ### v0.3.2
 
 Bugfix:
