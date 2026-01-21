@@ -1,7 +1,6 @@
 import base64
+from importlib import resources
 from pathlib import Path
-
-import pkg_resources
 
 
 def encode_file_to_base64_string(file_path: Path) -> str:
@@ -28,9 +27,9 @@ def read_resource(resource_path: str) -> str:
         The content of the resource as a string.
 
     """
-    from data_diff_viewer import PACKAGE_NAME
+    from data_diff_viewer import PACKAGE_NAME  # noqa: PLC0415
 
-    return pkg_resources.resource_string(PACKAGE_NAME, resource_path).decode("utf-8")
+    return resources.files(PACKAGE_NAME).joinpath(resource_path).read_text(encoding="utf-8")
 
 
 def _ref(_: object) -> None:
