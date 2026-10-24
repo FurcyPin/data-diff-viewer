@@ -149,6 +149,11 @@ inside the HTML file, and write the result as a new HTML page at the specified l
 
 ## Changelog
 
+### v0.3.3
+
+Maintenance:
+- Remove import of deprecated lib `pkg_resources`
+
 ### v0.3.2
 
 Bugfix:
