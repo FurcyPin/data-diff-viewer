@@ -8,7 +8,7 @@ concurrency:
 
 env:
   PROJECT_NAME: data_diff_viewer
-  POETRY_VERSION: "1.7.1"
+  POETRY_VERSION: "2.1.1"
 
 jobs:
   Build-and-Validate:
@@ -28,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install poetry
-        uses: abatilo/actions-poetry@v3
+        uses: abatilo/actions-poetry@v4
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
 
