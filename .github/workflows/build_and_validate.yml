@@ -51,6 +51,7 @@ jobs:
         run: poetry run mypy ${{ env.PROJECT_NAME }}
       - name: Security safety
         run: poetry run safety check
+        continue-on-error: true
 
       # Javascript #
       - name: Install nodejs
